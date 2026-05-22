@@ -23,7 +23,7 @@ export default async function VendorMotorcyclesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-heading font-semibold">My Motorcycles</h1>
+      <h1 className="text-2xl font-bold text-[#F5F7FA]">My Motorcycles</h1>
       <MotorcyclesClient motorcycles={(motorcycles ?? []) as MotorcycleRow[]} />
     </div>
   )

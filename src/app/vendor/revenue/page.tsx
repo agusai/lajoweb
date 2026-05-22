@@ -93,53 +93,53 @@ export default async function VendorRevenuePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-heading font-semibold">Revenue</h1>
+      <h1 className="text-2xl font-bold text-[#F5F7FA]">Revenue</h1>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground">
+      <Card className="bg-[#132A4D] border-white/8">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-[#94A3B8]">
             Total Revenue (12 months)
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center justify-between">
-          <span className="text-2xl font-bold">RM {totalRevenue.toFixed(2)}</span>
-          <TrendingUp className="size-8 text-green-600 opacity-80" />
+        <CardContent className="flex items-center justify-between pt-0">
+          <span className="text-2xl font-bold text-[#F5F7FA]">RM {totalRevenue.toFixed(2)}</span>
+          <TrendingUp className="size-8 text-[#22C55E] opacity-80" />
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-[#132A4D] border-white/8">
         <CardHeader>
-          <CardTitle>Revenue Over Time</CardTitle>
+          <CardTitle className="text-[#F5F7FA]">Revenue Over Time</CardTitle>
         </CardHeader>
         <CardContent>
           <VendorRevenueChart daily={daily} weekly={weekly} monthly={monthly} />
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-[#132A4D] border-white/8">
         <CardHeader>
-          <CardTitle>Revenue by Motorcycle</CardTitle>
+          <CardTitle className="text-[#F5F7FA]">Revenue by Motorcycle</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Model</TableHead>
-                <TableHead>Plate</TableHead>
-                <TableHead>Revenue (12mo)</TableHead>
+              <TableRow className="border-white/8 hover:bg-transparent">
+                <TableHead className="text-[#94A3B8]">Model</TableHead>
+                <TableHead className="text-[#94A3B8]">Plate</TableHead>
+                <TableHead className="text-[#94A3B8]">Revenue (12mo)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {(motorcycles ?? []).map((m) => (
-                <TableRow key={m.id}>
-                  <TableCell className="font-medium">{m.model}</TableCell>
-                  <TableCell>{m.plate_number}</TableCell>
-                  <TableCell>RM {(perMoto[m.id] ?? 0).toFixed(2)}</TableCell>
+                <TableRow key={m.id} className="border-white/8 hover:bg-white/5 transition-colors">
+                  <TableCell className="font-medium text-[#F5F7FA]">{m.model}</TableCell>
+                  <TableCell className="text-[#94A3B8]">{m.plate_number}</TableCell>
+                  <TableCell className="text-[#FF6A00] font-medium">RM {(perMoto[m.id] ?? 0).toFixed(2)}</TableCell>
                 </TableRow>
               ))}
               {!(motorcycles?.length) && (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
+                <TableRow className="border-white/8">
+                  <TableCell colSpan={3} className="text-center text-[#94A3B8] py-8">
                     No motorcycles found
                   </TableCell>
                 </TableRow>

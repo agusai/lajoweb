@@ -19,7 +19,7 @@ export default async function LicensesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-heading font-semibold">Licenses</h1>
+      <h1 className="text-2xl font-bold text-[#F5F7FA]">Licenses</h1>
       <LicensesTable licenses={(licenses ?? []) as LicenseRow[]} />
     </div>
   )

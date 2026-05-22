@@ -37,7 +37,7 @@ export default async function RidersPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-heading font-semibold">Riders</h1>
+      <h1 className="text-2xl font-bold text-[#F5F7FA]">Riders</h1>
       <RidersTable riders={ridersWithDeliveries} />
     </div>
   )

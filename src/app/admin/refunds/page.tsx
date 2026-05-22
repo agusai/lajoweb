@@ -21,7 +21,7 @@ export default async function RefundsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-heading font-semibold">Refunds</h1>
+      <h1 className="text-2xl font-bold text-[#F5F7FA]">Refunds</h1>
       <RefundsTable bookings={(bookings ?? []) as CompletedBooking[]} />
     </div>
   )

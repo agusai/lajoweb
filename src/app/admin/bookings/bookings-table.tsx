@@ -3,11 +3,9 @@
 import { useState, useMemo, useTransition } from 'react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
@@ -18,13 +16,15 @@ import type { BookingWithRelations } from './page'
 
 const STATUS_TABS = ['all', 'pending', 'confirmed', 'active', 'completed', 'cancelled'] as const
 
-function statusVariant(status: string): 'default' | 'secondary' | 'outline' | 'destructive' {
+function getStatusBadge(status: string) {
+  const base = 'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border'
   switch (status) {
-    case 'confirmed': return 'secondary'
-    case 'active': return 'default'
-    case 'completed': return 'outline'
-    case 'cancelled': return 'destructive'
-    default: return 'secondary'
+    case 'active': return `${base} bg-green-500/15 text-green-400 border-green-500/25`
+    case 'confirmed': return `${base} bg-orange-500/15 text-[#FF9B4D] border-orange-500/25`
+    case 'pending': return `${base} bg-orange-500/15 text-[#FF9B4D] border-orange-500/25`
+    case 'completed': return `${base} bg-slate-500/15 text-slate-400 border-slate-500/25`
+    case 'cancelled': return `${base} bg-red-500/15 text-red-400 border-red-500/25`
+    default: return `${base} bg-slate-500/15 text-slate-400 border-slate-500/25`
   }
 }
 
@@ -91,36 +91,42 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="flex-wrap h-auto gap-1">
-            {STATUS_TABS.map((s) => (
-              <TabsTrigger key={s} value={s} className="capitalize">
-                {s}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        <div className="flex flex-wrap gap-1">
+          {STATUS_TABS.map((s) => (
+            <button
+              key={s}
+              onClick={() => setActiveTab(s)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all ${
+                activeTab === s
+                  ? 'bg-[#FF6A00] text-white'
+                  : 'bg-white/5 text-[#94A3B8] hover:bg-white/10 hover:text-[#F5F7FA]'
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-[#94A3B8] pointer-events-none" />
           <Input
             placeholder="Search name or phone…"
-            className="pl-8 w-56"
+            className="pl-8 w-56 bg-white/5 border-white/10 text-[#F5F7FA] placeholder:text-[#94A3B8]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="rounded-xl border overflow-hidden">
+      <div className="rounded-xl border border-white/8 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Tourist</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Motorcycle</TableHead>
-              <TableHead>Duration</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Status</TableHead>
+            <TableRow className="border-white/8 hover:bg-transparent">
+              <TableHead className="text-[#94A3B8] font-medium">Tourist</TableHead>
+              <TableHead className="text-[#94A3B8] font-medium">Phone</TableHead>
+              <TableHead className="text-[#94A3B8] font-medium">Motorcycle</TableHead>
+              <TableHead className="text-[#94A3B8] font-medium">Duration</TableHead>
+              <TableHead className="text-[#94A3B8] font-medium">Total</TableHead>
+              <TableHead className="text-[#94A3B8] font-medium">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -135,25 +141,25 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
               return (
                 <TableRow
                   key={b.id}
-                  className="cursor-pointer hover:bg-muted/50"
+                  className="border-white/8 cursor-pointer hover:bg-white/5 transition-colors"
                   onClick={() => setSelectedBooking(b)}
                 >
-                  <TableCell className="font-medium">{b.guest_name ?? '—'}</TableCell>
-                  <TableCell>{b.guest_phone ?? '—'}</TableCell>
-                  <TableCell>
+                  <TableCell className="font-medium text-[#F5F7FA]">{b.guest_name ?? '—'}</TableCell>
+                  <TableCell className="text-[#94A3B8]">{b.guest_phone ?? '—'}</TableCell>
+                  <TableCell className="text-[#94A3B8]">
                     {motorcycle ? `${motorcycle.model} · ${motorcycle.plate_number}` : '—'}
                   </TableCell>
-                  <TableCell>{days}d</TableCell>
-                  <TableCell>RM {(b.total_price ?? 0).toFixed(2)}</TableCell>
+                  <TableCell className="text-[#94A3B8]">{days}d</TableCell>
+                  <TableCell className="text-[#F5F7FA]">RM {(b.total_price ?? 0).toFixed(2)}</TableCell>
                   <TableCell>
-                    <Badge variant={statusVariant(b.status)}>{b.status}</Badge>
+                    <span className={getStatusBadge(b.status)}>{b.status}</span>
                   </TableCell>
                 </TableRow>
               )
             })}
             {filtered.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+              <TableRow className="border-white/8">
+                <TableCell colSpan={6} className="text-center text-[#94A3B8] py-10">
                   No bookings found
                 </TableCell>
               </TableRow>
@@ -162,12 +168,11 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
         </Table>
       </div>
 
-      {/* Detail Sheet */}
       <Sheet open={!!selectedBooking} onOpenChange={(o) => !o && setSelectedBooking(null)}>
-        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-lg overflow-y-auto bg-[#132A4D] border-white/8">
           <SheetHeader>
-            <SheetTitle>Booking Details</SheetTitle>
-            <SheetDescription>
+            <SheetTitle className="text-[#F5F7FA]">Booking Details</SheetTitle>
+            <SheetDescription className="text-[#94A3B8]">
               #{selectedBooking?.id.slice(0, 8).toUpperCase()}
             </SheetDescription>
           </SheetHeader>
@@ -176,50 +181,50 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
             <div className="flex flex-col gap-5 px-4 pb-6">
               <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Tourist</p>
-                  <p className="font-medium">{selectedBooking.guest_name ?? '—'}</p>
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Tourist</p>
+                  <p className="font-medium text-[#F5F7FA]">{selectedBooking.guest_name ?? '—'}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Phone</p>
-                  <p className="font-medium">{selectedBooking.guest_phone ?? '—'}</p>
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Phone</p>
+                  <p className="font-medium text-[#F5F7FA]">{selectedBooking.guest_phone ?? '—'}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Motorcycle</p>
-                  <p className="font-medium">
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Motorcycle</p>
+                  <p className="font-medium text-[#F5F7FA]">
                     {moto ? `${moto.model} (${moto.plate_number})` : '—'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Status</p>
-                  <Badge variant={statusVariant(selectedBooking.status)}>
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Status</p>
+                  <span className={getStatusBadge(selectedBooking.status)}>
                     {selectedBooking.status}
-                  </Badge>
+                  </span>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Pickup</p>
-                  <p className="font-medium">
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Pickup</p>
+                  <p className="font-medium text-[#F5F7FA]">
                     {format(new Date(selectedBooking.pickup_date), 'dd MMM yyyy')}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Return</p>
-                  <p className="font-medium">
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Return</p>
+                  <p className="font-medium text-[#F5F7FA]">
                     {format(new Date(selectedBooking.return_date), 'dd MMM yyyy')}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Rental Price</p>
-                  <p className="font-medium">RM {(selectedBooking.rental_price ?? 0).toFixed(2)}</p>
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Rental Price</p>
+                  <p className="font-medium text-[#F5F7FA]">RM {(selectedBooking.rental_price ?? 0).toFixed(2)}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs mb-0.5">Security Deposit</p>
-                  <p className="font-medium">
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Security Deposit</p>
+                  <p className="font-medium text-[#F5F7FA]">
                     RM {(selectedBooking.security_deposit ?? 0).toFixed(2)}
                   </p>
                 </div>
                 <div className="col-span-2">
-                  <p className="text-muted-foreground text-xs mb-0.5">Total</p>
-                  <p className="text-lg font-bold">
+                  <p className="text-[#94A3B8] text-xs mb-0.5">Total</p>
+                  <p className="text-lg font-bold text-[#FF6A00]">
                     RM {(selectedBooking.total_price ?? 0).toFixed(2)}
                   </p>
                 </div>
@@ -227,12 +232,12 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
 
               {selectedBooking.qr_code_image_url && (
                 <div className="flex flex-col items-center gap-2">
-                  <p className="text-xs text-muted-foreground">QR Code</p>
+                  <p className="text-xs text-[#94A3B8]">QR Code</p>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={selectedBooking.qr_code_image_url}
                     alt="Booking QR Code"
-                    className="size-40 border rounded-xl object-contain"
+                    className="size-40 border border-white/10 rounded-xl object-contain bg-white"
                   />
                 </div>
               )}
@@ -242,7 +247,7 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
                   <Button
                     onClick={() => handleActivate(selectedBooking.id)}
                     disabled={isPending}
-                    className="flex-1"
+                    className="flex-1 bg-[#FF6A00] hover:bg-[#e05e00] text-white"
                   >
                     {isPending ? 'Activating…' : 'Activate Booking'}
                   </Button>
@@ -251,7 +256,7 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
                   <Button
                     onClick={() => setCompleteOpen(true)}
                     disabled={isPending}
-                    className="flex-1"
+                    className="flex-1 bg-[#FF6A00] hover:bg-[#e05e00] text-white"
                   >
                     Complete Booking
                   </Button>
@@ -262,27 +267,26 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
         </SheetContent>
       </Sheet>
 
-      {/* Complete Booking Dialog */}
       <Dialog open={completeOpen} onOpenChange={setCompleteOpen}>
-        <DialogContent>
+        <DialogContent className="bg-[#132A4D] border-white/8 text-[#F5F7FA]">
           <DialogHeader>
-            <DialogTitle>Complete Booking</DialogTitle>
+            <DialogTitle className="text-[#F5F7FA]">Complete Booking</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <Label>Bike Condition (1–5)</Label>
+              <Label className="text-[#94A3B8]">Bike Condition (1–5)</Label>
               <Select
                 value={completeForm.bike_condition_rating}
                 onValueChange={(v) =>
                   setCompleteForm((f) => ({ ...f, bike_condition_rating: v }))
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-white/5 border-white/10 text-[#F5F7FA]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-[#132A4D] border-white/10">
                   {[1, 2, 3, 4, 5].map((n) => (
-                    <SelectItem key={n} value={String(n)}>
+                    <SelectItem key={n} value={String(n)} className="text-[#F5F7FA]">
                       {n}
                     </SelectItem>
                   ))}
@@ -290,17 +294,17 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Fuel Level</Label>
+              <Label className="text-[#94A3B8]">Fuel Level</Label>
               <Select
                 value={completeForm.fuel_level}
                 onValueChange={(v) => setCompleteForm((f) => ({ ...f, fuel_level: v }))}
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-white/5 border-white/10 text-[#F5F7FA]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-[#132A4D] border-white/10">
                   {['empty', 'quarter', 'half', 'three-quarter', 'full'].map((v) => (
-                    <SelectItem key={v} value={v} className="capitalize">
+                    <SelectItem key={v} value={v} className="capitalize text-[#F5F7FA]">
                       {v}
                     </SelectItem>
                   ))}
@@ -308,9 +312,9 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Damage Notes</Label>
+              <Label className="text-[#94A3B8]">Damage Notes</Label>
               <textarea
-                className="min-h-[80px] w-full rounded-lg border bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring/50"
+                className="min-h-[80px] w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-[#F5F7FA] placeholder:text-[#94A3B8] resize-none focus:outline-none focus:ring-2 focus:ring-[#FF6A00]/50"
                 value={completeForm.damage_notes}
                 onChange={(e) =>
                   setCompleteForm((f) => ({ ...f, damage_notes: e.target.value }))
@@ -319,7 +323,7 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Refund Amount (RM)</Label>
+              <Label className="text-[#94A3B8]">Refund Amount (RM)</Label>
               <Input
                 type="number"
                 min="0"
@@ -328,14 +332,23 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
                 onChange={(e) =>
                   setCompleteForm((f) => ({ ...f, refund_amount: e.target.value }))
                 }
+                className="bg-white/5 border-white/10 text-[#F5F7FA]"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCompleteOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setCompleteOpen(false)}
+              className="border-white/10 text-[#94A3B8] hover:bg-white/5 hover:text-[#F5F7FA]"
+            >
               Cancel
             </Button>
-            <Button onClick={handleComplete} disabled={isPending}>
+            <Button
+              onClick={handleComplete}
+              disabled={isPending}
+              className="bg-[#FF6A00] hover:bg-[#e05e00] text-white"
+            >
               {isPending ? 'Completing…' : 'Complete Booking'}
             </Button>
           </DialogFooter>

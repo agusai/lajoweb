@@ -18,7 +18,7 @@ export default async function VendorLayout({ children }: { children: React.React
   if (profile?.user_type !== 'vendor') redirect('/login')
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="flex min-h-screen bg-[#0D1B2A]">
       <VendorSidebar />
       <div className="flex flex-col flex-1 md:ml-60 min-w-0">
         <VendorTopbar user={{ name: profile.name, email: profile.email ?? user.email ?? null }} />

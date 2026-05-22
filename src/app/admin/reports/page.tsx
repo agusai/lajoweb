@@ -79,49 +79,49 @@ export default async function ReportsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-heading font-semibold">Reports</h1>
+        <h1 className="text-2xl font-bold text-[#F5F7FA]">Reports</h1>
         <CsvExport bookings={bookings} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+        <Card className="bg-[#132A4D] border-white/8">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-[#94A3B8]">
               Total Revenue (12mo)
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-between">
-            <span className="text-2xl font-bold">RM {totalRevenue.toFixed(2)}</span>
-            <TrendingUp className="size-8 text-green-600 opacity-80" />
+          <CardContent className="flex items-center justify-between pt-0">
+            <span className="text-2xl font-bold text-[#F5F7FA]">RM {totalRevenue.toFixed(2)}</span>
+            <TrendingUp className="size-8 text-[#22C55E] opacity-80" />
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+        <Card className="bg-[#132A4D] border-white/8">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-[#94A3B8]">
               Total Bookings (12mo)
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-between">
-            <span className="text-2xl font-bold">{totalBookings}</span>
-            <BookOpen className="size-8 text-blue-600 opacity-80" />
+          <CardContent className="flex items-center justify-between pt-0">
+            <span className="text-2xl font-bold text-[#F5F7FA]">{totalBookings}</span>
+            <BookOpen className="size-8 text-[#FF9B4D] opacity-80" />
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+        <Card className="bg-[#132A4D] border-white/8">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-[#94A3B8]">
               Avg Booking Value
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-between">
-            <span className="text-2xl font-bold">RM {avgValue.toFixed(2)}</span>
-            <DollarSign className="size-8 text-purple-600 opacity-80" />
+          <CardContent className="flex items-center justify-between pt-0">
+            <span className="text-2xl font-bold text-[#F5F7FA]">RM {avgValue.toFixed(2)}</span>
+            <DollarSign className="size-8 text-[#FF6A00] opacity-80" />
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      <Card className="bg-[#132A4D] border-white/8">
         <CardHeader>
-          <CardTitle>Revenue Chart</CardTitle>
+          <CardTitle className="text-[#F5F7FA]">Revenue Chart</CardTitle>
         </CardHeader>
         <CardContent>
           <RevenueChart daily={daily} weekly={weekly} monthly={monthly} />

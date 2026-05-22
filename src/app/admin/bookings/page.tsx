@@ -29,7 +29,7 @@ export default async function BookingsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-heading font-semibold">Bookings</h1>
+      <h1 className="text-2xl font-bold text-[#F5F7FA]">Bookings</h1>
       <BookingsTable bookings={(bookings ?? []) as BookingWithRelations[]} />
     </div>
   )

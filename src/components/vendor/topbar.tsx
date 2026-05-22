@@ -2,8 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
 
 interface VendorTopbarProps {
@@ -29,17 +27,21 @@ export function VendorTopbar({ user }: VendorTopbarProps) {
     .slice(0, 2)
 
   return (
-    <header className="h-14 border-b bg-card flex items-center justify-between px-6 pl-14 md:pl-6 shrink-0">
+    <header className="h-14 border-b border-white/8 bg-[#132A4D] flex items-center justify-between px-6 pl-14 md:pl-6 shrink-0">
       <div />
       <div className="flex items-center gap-3">
-        <span className="hidden sm:block text-sm text-muted-foreground">{displayName}</span>
-        <Avatar>
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
-        <Button variant="ghost" size="icon" onClick={handleLogout} title="Sign out">
+        <span className="hidden sm:block text-sm text-[#94A3B8]">{displayName}</span>
+        <div className="flex size-8 items-center justify-center rounded-full bg-[#FF6A00] text-white text-xs font-bold">
+          {initials}
+        </div>
+        <button
+          onClick={handleLogout}
+          title="Sign out"
+          className="flex items-center justify-center size-8 rounded-lg text-[#94A3B8] hover:text-[#F5F7FA] hover:bg-white/5 transition-colors"
+        >
           <LogOut className="size-4" />
           <span className="sr-only">Sign out</span>
-        </Button>
+        </button>
       </div>
     </header>
   )

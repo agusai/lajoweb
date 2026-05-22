@@ -38,7 +38,7 @@ export default async function VendorsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-heading font-semibold">Vendors</h1>
+      <h1 className="text-2xl font-bold text-[#F5F7FA]">Vendors</h1>
       <VendorsTable vendors={vendorsWithCount} />
     </div>
   )
