@@ -12,6 +12,8 @@ import {
   BarChart3,
   Menu,
   X,
+  Motorbike,
+  MapPin,
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -22,7 +24,9 @@ const navItems = [
   { href: '/admin/licenses', label: 'Licenses', icon: FileText },
   { href: '/admin/refunds', label: 'Refunds', icon: RotateCcw },
   { href: '/admin/vendors', label: 'Vendors', icon: Store },
+  { href: '/admin/motorcycles', label: 'Motorcycles', icon: Motorbike },
   { href: '/admin/riders', label: 'Riders', icon: Bike },
+  { href: '/admin/tracking', label: 'Live Tracking', icon: MapPin },
   { href: '/admin/reports', label: 'Reports', icon: BarChart3 },
 ]
 
@@ -48,7 +52,7 @@ export function AdminSidebar() {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 w-60 bg-[#132A4D] border-r border-white/8 p-4 flex flex-col gap-6 transition-transform duration-200 md:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 w-60 bg-[#132A4D] border-r border-white/8 p-4 flex flex-col gap-6 transition-transform duration-200 md:translate-x-0 overflow-y-auto',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >

@@ -15,6 +15,25 @@ export async function toggleVendorStatus(vendorId: string, isActive: boolean) {
   return { success: true }
 }
 
+export async function toggleVendorStatusWithReason(
+  vendorId: string,
+  isActive: boolean,
+  reason: string
+) {
+  const supabase = await createClient()
+  const updateData: Record<string, unknown> = { is_active: isActive }
+  if (!isActive && reason) updateData.suspension_reason = reason
+
+  const { error } = await supabase
+    .from('users')
+    .update(updateData)
+    .eq('id', vendorId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/admin/vendors')
+  return { success: true }
+}
+
 export async function approveVendor(vendorId: string) {
   const supabase = await createClient()
   const { error } = await supabase

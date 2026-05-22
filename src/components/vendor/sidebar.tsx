@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Motorbike, TrendingUp, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Motorbike, TrendingUp, User, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: '/vendor/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/vendor/motorcycles', label: 'My Motorcycles', icon: Motorbike },
   { href: '/vendor/revenue', label: 'Revenue', icon: TrendingUp },
+  { href: '/vendor/profile', label: 'Profile', icon: User },
 ]
 
 export function VendorSidebar() {
