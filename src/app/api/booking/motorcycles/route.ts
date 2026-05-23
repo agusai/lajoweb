@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await supabase
       .from('motorcycles')
-      .select('id, name, brand, model, year, color, transmission, engine_cc, fuel_capacity, max_speed, daily_price, plate_number, condition, total_stock, available_stock, image_url, gallery_urls, features, description')
+      .select('*')
       .eq('status', 'available')
       .gt('available_stock', 0)
       .order('daily_price', { ascending: true })
