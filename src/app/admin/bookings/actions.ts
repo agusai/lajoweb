@@ -1,10 +1,23 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 
+export async function confirmBooking(bookingId: string) {
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from('bookings')
+    .update({ status: 'confirmed' })
+    .eq('id', bookingId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/admin/bookings')
+  revalidatePath('/admin/dashboard')
+  return { success: true }
+}
+
 export async function activateBooking(bookingId: string) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { error } = await supabase
     .from('bookings')
     .update({ status: 'active' })
@@ -25,7 +38,7 @@ export async function completeBooking(
     refund_amount: number
   }
 ) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { error } = await supabase
     .from('bookings')
     .update({

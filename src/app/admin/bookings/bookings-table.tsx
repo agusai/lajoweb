@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Search } from 'lucide-react'
-import { activateBooking, completeBooking } from './actions'
+import { confirmBooking, activateBooking, completeBooking } from './actions'
 import type { BookingWithRelations } from './page'
 
 const STATUS_TABS = ['all', 'pending', 'confirmed', 'active', 'completed', 'cancelled'] as const
@@ -52,6 +52,17 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
       return matchTab && matchSearch
     })
   }, [bookings, activeTab, search])
+
+  function handleConfirm(id: string) {
+    startTransition(async () => {
+      const result = await confirmBooking(id)
+      if (result.error) toast.error(result.error)
+      else {
+        toast.success('Booking confirmed')
+        setSelectedBooking(null)
+      }
+    })
+  }
 
   function handleActivate(id: string) {
     startTransition(async () => {
@@ -243,6 +254,15 @@ export function BookingsTable({ bookings }: { bookings: BookingWithRelations[] }
               )}
 
               <div className="flex gap-2">
+                {selectedBooking.status === 'pending' && (
+                  <Button
+                    onClick={() => handleConfirm(selectedBooking.id)}
+                    disabled={isPending}
+                    className="flex-1 bg-[#FF6A00] hover:bg-[#e05e00] text-white"
+                  >
+                    {isPending ? 'Confirming…' : '✓ Verify & Confirm Booking'}
+                  </Button>
+                )}
                 {selectedBooking.status === 'confirmed' && (
                   <Button
                     onClick={() => handleActivate(selectedBooking.id)}
