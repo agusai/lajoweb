@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { BookingsTable } from './bookings-table'
 
 export type BookingWithRelations = {
@@ -19,7 +19,7 @@ export type BookingWithRelations = {
 }
 
 export default async function BookingsPage() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data: bookings } = await supabase
     .from('bookings')
     .select(
